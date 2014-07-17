@@ -23,20 +23,32 @@ cleaned.june <- lapply(june.by.day, function(day){
   
     if(!identical(day$Hour, 0:23)){
     
+        #find missing hours 
         missing.hours <- setdiff(0:23, day$Hour)
+        
+        # create a new row for each missing hour
         new.rows <- t(mapply( function(hour){
             list(Year = day$Year[1], Day = day$Day[1], Hour = hour, Minute = day$Minute[1], 
             WS = NA, WD = NA, WD.Sig = NA, Amb.Temp = NA, RH = NA, Pres = NA, Panel.Temp =NA, 
             O3 = NA, X..O3.Valid = NA, Battery = NA, O3.Temp = NA, O3.Sig = NA, Flow = NA,
             O3.Pres = NA)
         }, missing.hours ))
+        
+        #insert the new row in day
         day <- rbind( day, new.rows )
     
     }
   
-    day <- unique(day) 
-    #day <- day[ order( day$Hour ), ]
+    #remove duplicates
+    day <- unique(day)
+    
+    #make day a data frame and sort it by hour
+    day <- as.data.frame( lapply( day, unlist ))
+    day <- day[order(day$Hour), ]
+    
+    #return day
     day
+    
 })
 
 #combining all cleaned data into one table for june 
