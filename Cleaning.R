@@ -12,14 +12,16 @@ reduced.data <- sorted.data[ !sorted.data$Minute == 40,  ]
 #Extract 40 hour data into a its own table called "blank" 
 blank.data <- satalite.data[ satalite.data$Minute == 40, 1:5 ]
 
-#reduce data so that it only consists days of June  
-june.data <- reduced.data[ reduced.data$Day %in% 152:181, ]
+#reduce data so that it only consists days of the month.
+#This line needs to be modified according to which month's data is being processed.
+#Modify by changing the days of the year in the data frame.
+monthly.data <- reduced.data[ reduced.data$Day %in% 152:181, ]
 
-#splitting the june data into days   
-june.by.day <- split(june.data, june.data$Day)
+#splitting the monthly data into days   
+monthly.by.day <- split(monthly.data, monthly.data$Day)
 
 #cleaning data: adding missing hours and deleting duplicates 
-cleaned.june <- lapply(june.by.day, function(day){
+cleaned.monthly <- lapply(monthly.by.day, function(day){
   
     if(!identical(day$Hour, 0:23)){
     
@@ -51,8 +53,8 @@ cleaned.june <- lapply(june.by.day, function(day){
     
 })
 
-#combining all cleaned data into one table for june 
-unsplit.june <- do.call("rbind", cleaned.june)
+#combining all cleaned data into one table for the month 
+unsplit.monthly <- do.call("rbind", cleaned.v)
 
 #write data to an excel file
-write.xlsx(unsplit.june, "sortedMData.xlsx", showNA = FALSE)
+write.xlsx(unsplit.monthly, "sortedMData.xlsx", showNA = FALSE)
